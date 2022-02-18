@@ -10,6 +10,8 @@
         }
         document.getElementById('results').innerHTML += msg + '\r\n';
     });
+
+
 }
 
 document.getElementById("login").addEventListener("click", login, false);
@@ -18,17 +20,20 @@ document.getElementById("logout").addEventListener("click", logout, false);
 
 var config = {
     authority: "https://dc2is.azurewebsites.net",
+    //authority: "https://localhost:5001",
     client_id: "js",
-    redirect_uri: "https://localhost:5003/callback.html",
+    //redirect_uri: "https://localhost:5003/callback.html",
+    redirect_uri: "https://rinadc2storage.z28.web.core.windows.net/callback.html",
     response_type: "code",
-    scope: "openid profile dispatch",
-    post_logout_redirect_uri: "https://localhost:5003/index.html",
+    scope: "openid profile email RinaApi role",
+    //post_logout_redirect_uri: "https://localhost:5003/index.html",
+    post_logout_redirect_uri: "https://rinadc2storage.z28.web.core.windows.net/index.html",
 };
 var mgr = new Oidc.UserManager(config);
 
 mgr.getUser().then(function (user) {
     if (user) {
-        log("User logged in", user.profile);
+        log("User logged in", user.profile, "Auth token", user.access_token);
     }
     else {
         log("User not logged in");
@@ -41,7 +46,7 @@ function login() {
 
 function api() {
     mgr.getUser().then(function (user) {
-        var url = "https://dc2api.azurewebsites.net/dispatch/registration";
+        var url = "https://dc2api.azurewebsites.net/api/test";
 
         var xhr = new XMLHttpRequest();
         xhr.open("GET", url);
